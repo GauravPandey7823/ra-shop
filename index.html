@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gaurav Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark-theme {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1a237e;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar .brand {
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .nav-links a {
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .nav-links a:hover {
+      background-color: #3949ab;
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+    }
+    .theme-btn {
+      border: 2px solid #fff;
+      background: transparent;
+      color: #fff;
+      padding: 0.25rem 0.75rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hero {
+      background-image: url('https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 1rem;
+      text-align: center;
+    }
+    .product-name {
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    .product-price {
+      color: #1a237e;
+      font-weight: 700;
+    }
+    .btn-add {
+      background-color: #1a237e;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-add:hover {
+      background-color: #3949ab;
+    }
+
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s;
+      padding: 1rem;
+      z-index: 1000;
+    }
+    .cart-sidebar.open {
+      right: 0;
+    }
+    .cart-header {
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .cart-item-name {
+      flex-grow: 1;
+      margin-left: 1rem;
+    }
+    .btn-remove {
+      background: transparent;
+      border: none;
+      color: #e53935;
+      cursor: pointer;
+    }
+    .cart-footer {
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    .checkout-btn {
+      margin-top: 1rem;
+      width: 100%;
+      background-color: #3949ab;
+      color: white;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .footer {
+      background-color: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .footer a {
+      color: white;
+      margin: 0 1rem;
+    }
+
+    #cookie-consent {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #1a237e;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background-color: #1a237e;
+        width: 200px;
+        padding: 1rem;
+      }
+      .nav-links.open {
+        display: flex;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    /* Link styling */
+.scroll-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #0277bd;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-link:hover {
+  background-color: #01579b;
+}
+
+/* Terms section styling */
+.terms-section {
+  padding: 2rem;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.terms-section h2 {
+  font-size: 2rem;
+  color: #37474f;
+  border-bottom: 2px solid #90a4ae;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.terms-section h3 {
+  margin-top: 1.5rem;
+  font-size: 1.3rem;
+  color: #455a64;
+}
+
+.terms-section a {
+  color: #0277bd;
+  text-decoration: underline;
+}
+
+.terms-section a:hover {
+  color: #01579b;
+}
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="brand">Trendy Tees</div>
+    <div class="nav-links" id="nav-links">
+  <a href="#">Home</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+  <a href="#terms">Terms</a>
+  <a href="#" id="cart-link">Cart</a>
+  <button class="theme-btn" id="theme-toggle">🌙</button>
+</div>
+    <div class="hamburger" id="hamburger">
+      <div></div><div></div><div></div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Gaurav for Everyone</h1>
+    <p>Explore our latest collection of stylish T-shirts!</p>
+  </section>
+
+  <section class="products" id="products-list"></section>
+
+  <aside class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">Shopping Cart</div>
+    <div id="cart-content">
+      <p>Your cart is empty.</p>
+    </div>
+    <div class="cart-footer">Total: $<span id="cart-total">0.00</span></div>
+    <button class="checkout-btn">Checkout</button>
+  </aside>
+
+  <section id="about" style="padding: 3rem 2rem; background-color: #f5f7fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #37474f; max-width: 800px; margin: 2rem auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #1e88e5;">About Us</h2>
+    <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.25rem;">
+      At Gaurav Shop, we believe fashion is a powerful means of self-expression that everyone deserves to experience. Founded by a passionate team of creatives and comfort-seekers, we understand that a great T-shirt is more than just fabric — it’s a statement.
+    </p>
+    <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.25rem;">
+      Whether you're a trendsetter, an artist, or someone who loves everyday basics with a twist, our collections are designed with you in mind. We take pride in offering apparel that’s not only stylish and affordable but also crafted for comfort and durability.
+    </p>
+    <p style="font-size: 1.1rem; line-height: 1.6;">
+        Gaurav Shop is your go-to destination for stylish, affordable, and high-quality T-shirts. We blend comfort with creativity to bring you unique pieces that fit every lifestyle. Our mission is to make fashion accessible and expressive for everyone.
+    </p>
+  </section>
+  
+  
+
+    <style>
+      /* Reset and base styles */
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        line-height: 1.6;
+        background-color: #fff;
+        scroll-behavior: smooth;
+        color: #333;
+      }
+      header {
+        background-color: #1e90ff;
+        padding: 1rem 2rem;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
+      nav {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1.5rem;
+      }
+      nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+      nav a:hover,
+      nav a:focus {
+        color: #ffcc00;
+        outline: none;
+      }
+  
+      main {
+        min-height: 100vh;
+        padding: 3rem 2rem;
+      }
+      /* Contact section */
+      #contact {
+        padding: 3rem 2rem;
+        background-color: #f5f5f5;
+        max-width: 600px;
+        margin: 3rem auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      #contact h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #1e90ff;
+        text-align: center;
+      }
+      #contact p {
+        font-size: 1.1rem;
+        margin: 0.8rem 0;
+        text-align: center;
+      }
+      #contact a {
+        color: #1e90ff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+      #contact a:hover,
+      #contact a:focus {
+        color: #ffcc00;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+        <a href="#contact" aria-label="Jump to Contact section">Contact</a>
+      </nav>
+    <main>
+      <section>
+        <h1>Welcome to Gaurav Shop</h1>
+        <p>Your ultimate destination for the coolest tees.</p>
+      </section>
+  
+      <section id="contact" tabindex="-1">
+        <h2>Contact</h2>
+        <p>Email us at <a href="mailto:support@trendytees.com">support@trendytees.com</a></p>
+        <p>Follow us on:
+          <a href="#" aria-label="Instagram">Instagram</a> |
+          <a href="#" aria-label="Twitter">Twitter</a> |
+          <a href="#" aria-label="Facebook">Facebook</a>
+        </p>
+      </section>
+    
+  
+  
+
+
+      <section id="terms" class="terms-section">
+        <h2>Terms and Conditions</h2>
+        <p>By using our website and purchasing our products, you agree to the following terms and conditions. Please read them carefully. We reserve the right to update or modify these terms at any time without prior notice.</p>
+      
+        <h3>1. Use of the Website</h3>
+        <p>You agree to use our website in accordance with all applicable laws and regulations. You are prohibited from using the site to engage in illegal, harmful, or fraudulent activity.</p>
+      
+        <h3>2. Product Information</h3>
+        <p>We strive to ensure all product descriptions and prices are accurate. However, we reserve the right to correct any errors and to change or update information at any time without prior notice.</p>
+      
+        <h3>3. Order Acceptance</h3>
+        <p>We reserve the right to refuse or cancel any order for any reason, including errors in product or pricing information, or suspected fraud.</p>
+      
+        <h3>4. Return Policy</h3>
+        <p>Please refer to our <a href="/returns-policy">Return Policy</a> for detailed information on returning products.</p>
+      
+        <h3>5. Privacy Policy</h3>
+        <p>We take your privacy seriously. Please refer to our <a href="/privacy-policy">Privacy Policy</a> to understand how we collect and use your information.</p>
+      
+        <h3>6. Limitation of Liability</h3>
+        <p>We shall not be liable for any direct, indirect, incidental, or consequential damages that result from the use of or inability to use our website or products.</p>
+      </section>
+      
+
+  <footer class="footer">
+    <p>&copy; 2023 Trendy Tees. All rights reserved.</p>
+    <div>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Terms</a>
+    </div>
+  </footer>
+
+  <div id="cookie-consent">
+    <p>This website uses cookies to enhance the user experience. <a href="#">Learn more</a></p>
+    <button id="accept-cookies" style="background: #e53935; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer;">Accept</button>
+  </div>
+
+  <script>
+    const products = [
+      { id: 1, name: 'Classic White Tee', price: 19.99, image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=70' },
+      { id: 2, name: 'Bold Black Tee', price: 24.99, image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=70' },
+      { id: 3, name: 'Vintage Graphic Tee', price: 29.99, image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=70' },
+      { id: 4, name: 'Striped Summer Tee', price: 22.49, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=400&q=70' }
+    ];
+    const cart = [];
+
+    const productsListEl = document.getElementById('products-list');
+    const cartSidebarEl = document.getElementById('cart-sidebar');
+    const cartContentEl = document.getElementById('cart-content');
+    const cartTotalEl = document.getElementById('cart-total');
+    const cartLinkEl = document.getElementById('cart-link');
+    const navLinksEl = document.getElementById('nav-links');
+    const hamburgerBtn = document.getElementById('hamburger');
+
+    function renderProducts() {
+      productsListEl.innerHTML = '';
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-name">${product.name}</h3>
+            <div class="product-price">$${product.price.toFixed(2)}</div>
+            <button class="btn-add" data-id="${product.id}">Add to Cart</button>
+          </div>
+        `;
+        productsListEl.appendChild(card);
+      });
+    }
+
+    function updateCart() {
+      cartContentEl.innerHTML = '';
+      if (cart.length === 0) {
+        cartContentEl.innerHTML = '<p>Your cart is empty.</p>';
+        cartTotalEl.textContent = '0.00';
+        return;
+      }
+      let total = 0;
+      cart.forEach(item => {
+        const product = products.find(p => p.id === item.id);
+        total += product.price * item.quantity;
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" />
+          <div class="cart-item-name">${product.name} (x${item.quantity})</div>
+          <button class="btn-remove" data-id="${item.id}">&times;</button>
+        `;
+        cartContentEl.appendChild(cartItem);
+      });
+      cartTotalEl.textContent = total.toFixed(2);
+    }
+
+    function addToCart(id) {
+      const existingItem = cart.find(item => item.id === id);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({ id, quantity: 1 });
+      }
+      updateCart();
+    }
+
+    function removeFromCart(id) {
+      const index = cart.findIndex(item => item.id === id);
+      if (index !== -1) {
+        cart[index].quantity--;
+        if (cart[index].quantity === 0) {
+          cart.splice(index, 1);
+        }
+        updateCart();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      if (!getCookie('cookieConsent')) {
+        document.getElementById('cookie-consent').style.display = 'block';
+      }
+    });
+
+    productsListEl.addEventListener('click', e => {
+      if (e.target.classList.contains('btn-add')) {
+        const id = parseInt(e.target.dataset.id, 10);
+        addToCart(id);
+      }
+    });
+
+    cartContentEl.addEventListener('click', e => {
+      if (e.target.classList.contains('btn-remove')) {
+        const id = parseInt(e.target.dataset.id, 10);
+        removeFromCart(id);
+      }
+    });
+
+    cartLinkEl.addEventListener('click', e => {
+      e.preventDefault();
+      cartSidebarEl.classList.toggle('open');
+    });
+
+    hamburgerBtn.addEventListener('click', () => {
+      navLinksEl.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!cartSidebarEl.contains(e.target) && !cartLinkEl.contains(e.target)) {
+        cartSidebarEl.classList.remove('open');
+      }
+    });
+
+    document.getElementById('accept-cookies').addEventListener('click', () => {
+      setCookie('cookieConsent', 'true', 30);
+      document.getElementById('cookie-consent').style.display = 'none';
+    });
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+    });
+
+    function setCookie(name, value, days) {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+    }
+
+    function getCookie(name) {
+      return document.cookie.split('; ').reduce((r, c) => {
+        const [key, v] = c.split('=');
+        return key === name ? decodeURIComponent(v) : r;
+      }, '');
+    }
+  </script>
+<script>
+    document.querySelectorAll('.scroll-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+  
+</body>
+</html>
